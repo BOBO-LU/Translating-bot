@@ -1,0 +1,16 @@
+az deployment group create 
+--resource-group "17th-jonathan-app-service-plan" 
+--template-file "C:\Users\v-wenklu\OneDrive - Microsoft\Desktop\bobo\Project\Translating-bot\deploymentTemplates\template-with-preexisting-rg.json" 
+--parameters appId="8ce17e70-c33f-4dfd-b809-f751f6e45370"   appSecret="!Xm3jp6d93y xul4dj4"  botId="17th-jonathan-bot-channels-registration"   newWebAppName="17th-jonathan-new-web-app-name"   existingAppServicePlan="jonathan-app-service-plan-test"  appServicePlanLocation="East Asia" 
+--name "17th-jonathan-bot-application-service"
+
+
+Deploy via ARM template (with new Resource Group)
+
+az deployment sub create  --template-file "C:\Users\v-wenklu\OneDrive - Microsoft\Desktop\bobo\Project\Translating-bot\deploymentTemplates\template-with-new-rg.json"  --location "East Asia"  --parameters appId="8ce17e70-c33f-4dfd-b809-f751f6e45370" appSecret="!Xm3jp6d93y xul4dj4" botId="17th-jonathan-bot" botSku=F0 newAppServicePlanName="17th-jonathan-bot-service-plan" newWebAppName="17th-jonathan-web-app" groupName="17th-jonathan-bot-deploy" groupLocation="eastasia" newAppServicePlanLocation="eastasia"  --name "17th-jonathan-bot"
+
+az deployment sub create 
+--template-file "<path-to-template-with-new-rg.json" 
+--location <region-location-name> 
+--parameters appId="<app-id-from-previous-step>" appSecret="<password-from-previous-step>" botId="<id or bot-app-service-name>" botSku=F0 newAppServicePlanName="<new-service-plan-name>" newWebAppName="<bot-app-service-name>" groupName="<new-group-name>" groupLocation="<region-location-name>" newAppServicePlanLocation="<region-location-name>" 
+--name "<bot-app-service-name>"

@@ -9,6 +9,9 @@ from botbuilder.schema import Activity, ActivityTypes
 from translation import MicrosoftTranslator
 from translation.translation_settings import TranslationSettings
 
+from config import ColorFunctions
+
+c = ColorFunctions()
 
 class TranslationMiddleware(Middleware):
     """
@@ -17,7 +20,7 @@ class TranslationMiddleware(Middleware):
     """
     user_text_message = "" #save the user's text in english every turn
     def __init__(self, translator: MicrosoftTranslator, user_state: UserState):
-        print(f'___TranslationMiddleware: __init__')
+        print(f'{c.magenta("___TranslationMiddleware : ")} __init__')
         self.translator = translator
         self.language_preference_accessor = user_state.create_property(
             "LanguagePreference"
@@ -32,9 +35,9 @@ class TranslationMiddleware(Middleware):
         :param logic:
         :return:
         """
-        print(f'___TranslationMiddleware: on_turn')
+        print(c.magenta("___TranslationMiddleware : "), f'on_turn')
         translate = await self._should_translate(context)
-        print(f'___TranslationMiddleware: context = {context}')
+        print(c.magenta("___TranslationMiddleware : "), f'context = {context}')
         
         # 如果要使用者語言不是英文，而且訊息類別是message，則送到翻譯器當中，把句子中的文字替換成預設語言
         if translate and context.activity.type == ActivityTypes.message:
@@ -44,18 +47,18 @@ class TranslationMiddleware(Middleware):
             user_text_message = await self.translator.translate(
                 context.activity.text, TranslationSettings.default_language.value
             )
-            print(f"___TranslationMiddleware: context.activity.type = {context.activity.type}, context.actitiy.text = {context.activity.text}")
+            print(c.magenta('___TranslationMiddleware : '), f"context.activity.type = {context.activity.type}, context.actitiy.text = {context.activity.text}, user_text_message = {user_text_message}")
         else :
-            context.activity.text = await self.translator.translate(
-                context.activity.text, TranslationSettings.default_language.value
-            )
-            print(f"___TranslationMiddleware:  ## DO NOTHING ##  context.activity.type = {context.activity.type}, context.actitiy.text = {context.activity.text}")
+            # context.activity.text = await self.translator.translate(
+            #     context.activity.text, TranslationSettings.default_language.value
+            # )
+            print(c.magenta('___TranslationMiddleware : '), f"{c.yellow('## DO NOTHING ##')}  context.activity.type = {context.activity.type}, context.actitiy.text = {context.activity.text}")
             
             # this function will be execute when send_activity happens
         async def aux_on_send(
             ctx: TurnContext, activities: List[Activity], next_send: Callable
         ):
-            print(f'_____aux_on_send()')
+            print(f'{c.green_function("_____aux_on_send()")}')
             user_language = await self.language_preference_accessor.get(
                 ctx, TranslationSettings.default_language.value
             )
@@ -74,7 +77,7 @@ class TranslationMiddleware(Middleware):
         async def aux_on_update(
             ctx: aux_on_send, activity: Activity, next_update: Callable
         ):
-            print(f'_____aux_on_update()')
+            print(f'{c.green_function("_____aux_on_update()")}')
             user_language = await self.language_preference_accessor.get(
                 ctx, TranslationSettings.default_language.value
             )
@@ -92,7 +95,7 @@ class TranslationMiddleware(Middleware):
         context.on_update_activity(aux_on_update)
         
         await logic()
-        print(f"___TranslationMiddleware: end  on_turn() \n ")
+        print(c.magenta("___TranslationMiddleware : "), f"end  on_turn() \n ")
     async def _should_translate(self, turn_context: TurnContext) -> bool:
         user_language = await self.language_preference_accessor.get(
             turn_context, TranslationSettings.default_language.value)

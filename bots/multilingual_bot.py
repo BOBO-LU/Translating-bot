@@ -21,6 +21,9 @@ from botbuilder.schema import (
 
 from translation.translation_settings import TranslationSettings
 
+from config import ColorFunctions
+
+c = ColorFunctions()
 
 class MultiLingualBot(ActivityHandler):
     """
@@ -30,7 +33,7 @@ class MultiLingualBot(ActivityHandler):
     """
 
     def __init__(self, user_state: UserState):
-        print(f"MultiLingualBot: __init__ActivityHandler = {ActivityHandler}")
+        print(c.cyan_function("MultiLingualBot:") ,f" __init__ActivityHandler = {ActivityHandler}")
         if user_state is None:
             raise TypeError(
                 "[MultiLingualBot]: Missing parameter. user_state is required but None was given"
@@ -57,7 +60,7 @@ class MultiLingualBot(ActivityHandler):
                 )
 
     async def on_message_activity(self, turn_context: TurnContext):
-        print(f"___Multilingual_bot: on_message_activity, turn_context = {turn_context}")
+        print(c.cyan("___Multilingual_bot:"), f"on_message_activity, turn_context = {turn_context}")
         if self._is_language_change_requested(turn_context.activity.text):
             # If the user requested a language change through the suggested actions with values "es" or "en",
             # simply change the user's language preference in the user state.
@@ -84,6 +87,7 @@ class MultiLingualBot(ActivityHandler):
                 lang = TranslationSettings.english_spanish.value
 
             print("_____TranslationSettings.english_spanish.value :", lang)
+
             await self.language_preference_accessor.set(turn_context, lang)
 
             await turn_context.send_activity(f"Your current language code is: {lang}, type to translate.")
@@ -128,9 +132,9 @@ class MultiLingualBot(ActivityHandler):
             reply = turn_context.activity.text
             await turn_context.send_activity(reply)
            
-        print(f"___Multilingual_bot: end     on_message_activity, turn_context = {turn_context}")
+        print(c.cyan("___Multilingual_bot:"), f"end on_message_activity, turn_context = {c.blue_function(turn_context)}")
     def _create_adaptive_card_attachment(self) -> Attachment:
-        print(f"___multilingual_bot: _create_adaptive_card_attachment , self = {self}")
+        print(c.cyan("___Multilingual_bot:"), f"_create_adaptive_card_attachment , self = {self}")
         """
         Load attachment from file.
         :return:

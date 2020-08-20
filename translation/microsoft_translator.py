@@ -4,6 +4,9 @@
 import uuid
 import requests
 
+from config import ColorFunctions
+
+c = ColorFunctions()
 
 class MicrosoftTranslator:
     def __init__(self, subscription_key: str, subscription_region: str):
@@ -16,7 +19,7 @@ class MicrosoftTranslator:
     # will grab these values from our web app, and use them in the request.
     # See main.js for Ajax calls.
     async def translate(self, text_input, language_output):
-        print(f'___MicrosoftTranlator: translate: text_input = {text_input}, language_output = {language_output}')
+        print(c.orange_function("___MicrosoftTranlator: "), f'translate: text_input = {text_input}, language_output = {language_output}')
 
         ## the translator will translate ja to other language and skip the language changing function
         if text_input == "ja": 
@@ -39,7 +42,7 @@ class MicrosoftTranslator:
         
         # You can pass more than one object in body.
         body = [{"text": text_input}]
-        print("_____send request to: ", constructed_url)
+        print(c.orange_function("___MicrosoftTranlator: "), f"_____send request to: ", constructed_url)
         response = requests.post(constructed_url, headers=headers, json=body)
         
         if response.status_code / 100 != 2:
@@ -49,5 +52,5 @@ class MicrosoftTranslator:
 
         # for this sample, return the first translation
         json_response = response.json()
-        print(f"_____json_response: {json_response}")
+        print(f"{c.orange_function('_____json_response')}: {json_response}")
         return json_response[0]["translations"][0]["text"]
